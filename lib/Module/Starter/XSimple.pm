@@ -2,11 +2,12 @@ package Module::Starter::XSimple;
 use base 'Module::Starter::Simple';
 # vi:et:sw=4 ts=4
 
-use version; $VERSION = qv('0.0.1');
+use version; $VERSION = qv(v0.0.2);
 
 use warnings;
 use strict;
 use Carp;
+use Path::Class;
 
 # Other recommended modules (uncomment to use):
 #  use IO::Prompt;
@@ -163,11 +164,13 @@ sub _create_typemap {
     my ($manifest_file, $typemap_file) = 
     	$self->module_path_create($module, '');
  
-    $manifest_file =~ s:/\w+$:/typemap:;
-    $typemap_file =~ s:/\w+$:/typemap:;
+    #change typemap file name to 'typemap'
+    $manifest_file = Path::Class::File->new($manifest_file)->parent->file('typemap');
+    $typemap_file = Path::Class::File->new($typemap_file)->parent->file('typemap');
 
     open( my $fh, ">", $typemap_file )
     	or die "Can't create $typemap_file: $!\n";
+    print "open $typemap_file to print typemap to\n";
     print $fh $self->typemap_guts($module);
     close $fh;
     $self->progress( "Created typemap" );
@@ -441,7 +444,7 @@ Module::Starter::XSimple - Create XS modules with Module::Starter
 
 =head1 VERSION
 
-This document describes Module::Starter::XSimple version 0.0.1
+This document describes Module::Starter::XSimple version v0.0.2
 
 
 =head1 DESCRIPTION
@@ -539,7 +542,7 @@ John Peacock  C<< <jpeacock@cpan.org> >>
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2005, John Peacock C<< <jpeacock@cpan.org> >>. All rights reserved.
+Copyright (c) 2005,2012 John Peacock C<< <jpeacock@cpan.org> >>. All rights reserved.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
